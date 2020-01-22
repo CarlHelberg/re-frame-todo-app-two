@@ -74,6 +74,13 @@
   (fn [db _]
     (assoc db :new-todo-text "")))
 
+(rf/reg-event-db
+  :mark-as-done
+  (fn [db [event-name todo-item]]
+    (assoc db :todos (map (fn [todo] (if (= (:todo todo) (:todo todo-item))
+                      (assoc todo :done true)
+                      todo)) (:todos db)))))
+
 ;;subscriptions
 
 (rf/reg-sub

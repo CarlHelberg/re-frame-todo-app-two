@@ -42,7 +42,8 @@
 (defn create-incompleted-todos
   [todo-item]
   [:li (:todo todo-item)
-   [:button "Mark as done"]
+   [:br]
+   [:button {:on-click #(rf/dispatch [:mark-as-done todo-item])} "Mark as done"]
    [:button "Edit"]])
 
 (defn display-incompleted-todos
@@ -53,7 +54,9 @@
 
 (defn create-completed-todos
   [todo-item]
-  [:li (:todo todo-item)])
+  [:li (:todo todo-item)
+   [:br]
+   [:button "Mark as not done"]])
 
 (defn display-completed-todos
   [todo-list]
