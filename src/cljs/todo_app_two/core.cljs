@@ -41,7 +41,12 @@
 
 (defn todo
   [todo-item]
-  [:li (:todo todo-item)])
+  [:li (:todo todo-item)
+   [:br]
+   (if (:done todo-item)
+     [:button {:on-click #(rf/dispatch [:mark-as-not-done todo-item])} "Mark as not done"]
+     [:button {:on-click #(rf/dispatch [:mark-as-done todo-item])} "Mark as done"])
+   [:button {:on-click #(rf/dispatch [:edit-todo-text todo-item])} "Edit"]])
 
 (defn todo-list
   [todo-list]
@@ -57,11 +62,11 @@
    [:button {:on-click #(rf/dispatch [:create-new-todo])} "Add todo"]
    [:br]
    [:h1 "To Do"]
+   [:h3 "To edit a todo, enter the text above and click on Edit! (not Add!)"]
    [todo-list @(rf/subscribe [:incompleted-todos])]
    [:br]
    [:h1 "Done"]
-   [todo-list @(rf/subscribe [:completed-todos])]
-   ])
+   [todo-list @(rf/subscribe [:completed-todos])]])
 
 (def pages
   {:home #'home-page

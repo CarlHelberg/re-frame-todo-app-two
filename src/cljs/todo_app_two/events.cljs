@@ -74,6 +74,32 @@
   (fn [db _]
     (assoc db :new-todo-text "")))
 
+(rf/reg-event-db
+  :mark-as-done
+  (fn [db [event-name todo-item]]
+    (assoc db :todos (map (fn [todo] (if (= (:todo todo) (:todo todo-item))
+                      (assoc todo :done true)
+                      todo)) (:todos db)))))
+
+(rf/reg-event-db
+  :mark-as-not-done
+  (fn [db [event-name todo-item]]
+    (assoc db :todos (map (fn [todo] (if (= (:todo todo) (:todo todo-item))
+                                       (assoc todo :done false)
+                                       todo)) (:todos db)))))
+
+(rf/reg-event-fx
+  :edit-todo-text
+  (fn [effects [event-name todo-item]]
+    (let [db        (:db effects)
+          todos     (:todos db)
+          text      (:new-todo-text db)
+          new-todos (map (fn [todo] (if (= (:todo todo) (:todo todo-item))
+                                       (assoc todo :todo text)
+                                       todo)) todos)]
+    {:db (assoc db :todos new-todos)
+     :dispatch [:reset-new-todo-text]})))
+
 ;;subscriptions
 
 (rf/reg-sub
