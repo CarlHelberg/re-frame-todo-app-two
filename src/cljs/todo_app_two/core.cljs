@@ -56,7 +56,8 @@
 (defn display-completed-todos
   [todo-list]
   [:ul
-   (map (fn [todo-item] (create-completed-todos todo-item)) todo-list)])
+   (map (fn [todo-item] (if (= (:done todo-item) true)
+                          (create-completed-todos todo-item))) todo-list)])
 
 (defn home-page []
   [:section.section>div.container>div.content
