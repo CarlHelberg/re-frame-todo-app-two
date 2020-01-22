@@ -48,6 +48,15 @@
   [:ul
    (map (fn [todo-item] (create-incompleted-todos todo-item)) todo-list)])
 
+(defn create-completed-todos
+  [todo-item]
+  [:li (:todo todo-item)])
+
+(defn display-completed-todos
+  [todo-list]
+  [:ul
+   (map (fn [todo-item] (create-completed-todos todo-item)) todo-list)])
+
 (defn home-page []
   [:section.section>div.container>div.content
    [:textarea {:value @(rf/subscribe [:new-todo-text])
@@ -58,7 +67,7 @@
    [:br]
    [display-incompleted-todos @(rf/subscribe [:todo-list])]
    [:br]
-   ;[display-completed-todos]
+   [display-completed-todos @(rf/subscribe [:todo-list])]
    ])
 
 (def pages
