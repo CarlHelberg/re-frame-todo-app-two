@@ -46,7 +46,8 @@
 (defn display-incompleted-todos
   [todo-list]
   [:ul
-   (map (fn [todo-item] (create-incompleted-todos todo-item)) todo-list)])
+   (map (fn [todo-item] (if (= (:done todo-item) false)
+                          (create-incompleted-todos todo-item))) todo-list)])
 
 (defn create-completed-todos
   [todo-item]
@@ -65,8 +66,10 @@
                             (rf/dispatch [:change-new-todo-text (-> event .-target .-value)]))}]
    [:button {:on-click #(rf/dispatch [:create-new-todo])} "Add todo"]
    [:br]
+   [:h1 "To Do"]
    [display-incompleted-todos @(rf/subscribe [:todo-list])]
    [:br]
+   [:h1 "Done"]
    [display-completed-todos @(rf/subscribe [:todo-list])]
    ])
 
