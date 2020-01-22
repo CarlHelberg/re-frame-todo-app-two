@@ -39,30 +39,19 @@
   [:section.section>div.container>div.content
    [:img {:src "/img/warning_clojure.png"}]])
 
-(defn create-incompleted-todos
+(defn todo
   [todo-item]
   [:li (:todo todo-item)
    [:br]
-   [:button {:on-click #(rf/dispatch [:mark-as-done todo-item])} "Mark as done"]
-   [:button {:on-click #(rf/dispatch [:edit-todo-text todo-item])}"Edit"]])
+   (if (:done todo-item)
+     [:button {:on-click #(rf/dispatch [:mark-as-not-done todo-item])} "Mark as not done"]
+     [:button {:on-click #(rf/dispatch [:mark-as-done todo-item])} "Mark as done"])
+   [:button {:on-click #(rf/dispatch [:edit-todo-text todo-item])} "Edit"]])
 
-(defn display-incompleted-todos
+(defn todo-list
   [todo-list]
   [:ul
-   (map (fn [todo-item] (if (= (:done todo-item) false)
-                          (create-incompleted-todos todo-item))) todo-list)])
-
-(defn create-completed-todos
-  [todo-item]
-  [:li (:todo todo-item)
-   [:br]
-   [:button {:on-click #(rf/dispatch [:mark-as-not-done todo-item])}"Mark as not done"]])
-
-(defn display-completed-todos
-  [todo-list]
-  [:ul
-   (map (fn [todo-item] (if (= (:done todo-item) true)
-                          (create-completed-todos todo-item))) todo-list)])
+   (map todo todo-list)])
 
 (defn home-page []
   [:section.section>div.container>div.content
@@ -74,11 +63,10 @@
    [:br]
    [:h1 "To Do"]
    [:h3 "To edit a todo, enter the text above and click on Edit! (not Add!)"]
-   [display-incompleted-todos @(rf/subscribe [:todo-list])]
+   [todo-list @(rf/subscribe [:incompleted-todos])]
    [:br]
    [:h1 "Done"]
-   [display-completed-todos @(rf/subscribe [:todo-list])]
-   ])
+   [todo-list @(rf/subscribe [:completed-todos])]])
 
 (def pages
   {:home #'home-page
