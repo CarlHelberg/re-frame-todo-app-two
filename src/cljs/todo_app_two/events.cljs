@@ -53,6 +53,27 @@
   (fn [db [event value]]
     (assoc db :new-todo-text value)))
 
+(defn create-todo-from-text
+  [text]
+  {:todo text :done false})
+
+(rf/reg-event-fx
+  :create-new-todo
+  (fn [effects _]
+    (let [db    (:db effects)
+          todos (:todos db)
+          text  (:new-todo-text db)
+          new-todos (if (nil? todos)
+                      [(create-todo-from-text text)]
+                      (conj todos (create-todo-from-text text)))]
+      {:db (assoc db :todos new-todos)
+       :dispatch [:reset-new-todo-text]})))
+
+(rf/reg-event-db
+  :reset-new-todo-text
+  (fn [db _]
+    (assoc db :new-todo-text "")))
+
 ;;subscriptions
 
 (rf/reg-sub

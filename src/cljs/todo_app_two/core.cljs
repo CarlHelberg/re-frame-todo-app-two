@@ -45,7 +45,7 @@
                :placeholder "Write what you need to do!"
                :on-change (fn [event]
                             (rf/dispatch [:change-new-todo-text (-> event .-target .-value)]))}]
-   [:button "Add todo"]])
+   [:button {:on-click #(rf/dispatch [:create-new-todo])} "Add todo"]])
 
 (def pages
   {:home #'home-page
