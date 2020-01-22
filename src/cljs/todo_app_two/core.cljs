@@ -39,10 +39,29 @@
   [:section.section>div.container>div.content
    [:img {:src "/img/warning_clojure.png"}]])
 
+(defn todo
+  [todo-item]
+  [:li (:todo todo-item)])
+
+(defn todo-list
+  [todo-list]
+  [:ul
+   (map todo todo-list)])
+
 (defn home-page []
   [:section.section>div.container>div.content
-   (when-let [docs @(rf/subscribe [:docs])]
-     [:div {:dangerouslySetInnerHTML {:__html (md->html docs)}}])])
+   [:textarea {:value @(rf/subscribe [:new-todo-text])
+               :placeholder "Write what you need to do!"
+               :on-change (fn [event]
+                            (rf/dispatch [:change-new-todo-text (-> event .-target .-value)]))}]
+   [:button {:on-click #(rf/dispatch [:create-new-todo])} "Add todo"]
+   [:br]
+   [:h1 "To Do"]
+   [todo-list @(rf/subscribe [:incompleted-todos])]
+   [:br]
+   [:h1 "Done"]
+   [todo-list @(rf/subscribe [:completed-todos])]
+   ])
 
 (def pages
   {:home #'home-page
