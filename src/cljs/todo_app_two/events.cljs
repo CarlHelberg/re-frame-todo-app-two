@@ -107,3 +107,9 @@
   :new-todo-text
   (fn [db _]
     (:new-todo-text db)))
+
+(rf/reg-sub
+  :todo-list
+  (fn [db _]
+    (:todos db)))
+

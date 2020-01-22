@@ -39,6 +39,15 @@
   [:section.section>div.container>div.content
    [:img {:src "/img/warning_clojure.png"}]])
 
+(defn create-incompleted-todos
+  [todo-item]
+  [:li (:todo todo-item)])
+
+(defn display-incompleted-todos
+  [todo-list]
+  [:ul
+   (map (fn [todo-item] (create-incompleted-todos todo-item)) todo-list)])
+
 (defn home-page []
   [:section.section>div.container>div.content
    [:textarea {:value @(rf/subscribe [:new-todo-text])
@@ -47,9 +56,10 @@
                             (rf/dispatch [:change-new-todo-text (-> event .-target .-value)]))}]
    [:button {:on-click #(rf/dispatch [:create-new-todo])} "Add todo"]
    [:br]
-   [display-incompleted-todos]
+   [display-incompleted-todos @(rf/subscribe [:todo-list])]
    [:br]
-   [display-completed-todos]])
+   ;[display-completed-todos]
+   ])
 
 (def pages
   {:home #'home-page
