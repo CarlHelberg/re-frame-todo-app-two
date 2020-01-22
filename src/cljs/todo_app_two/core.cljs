@@ -44,7 +44,8 @@
    [:textarea {:value @(rf/subscribe [:new-todo-text])
                :placeholder "Write what you need to do!"
                :on-change (fn [event]
-                            (rf/dispatch [:change-new-todo-text (-> event .-target .-value)]))}]])
+                            (rf/dispatch [:change-new-todo-text (-> event .-target .-value)]))}]
+   [:button "Add todo"]])
 
 (def pages
   {:home #'home-page
