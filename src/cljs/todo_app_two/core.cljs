@@ -41,7 +41,9 @@
 
 (defn create-incompleted-todos
   [todo-item]
-  [:li (:todo todo-item)])
+  [:li (:todo todo-item)
+   [:button "Mark as done"]
+   [:button "Edit"]])
 
 (defn display-incompleted-todos
   [todo-list]
