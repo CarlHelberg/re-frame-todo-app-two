@@ -41,8 +41,7 @@
 
 (defn home-page []
   [:section.section>div.container>div.content
-   (when-let [docs @(rf/subscribe [:docs])]
-     [:div {:dangerouslySetInnerHTML {:__html (md->html docs)}}])])
+   [:textarea {:placeholder "new todo here"}]])
 
 (def pages
   {:home #'home-page
