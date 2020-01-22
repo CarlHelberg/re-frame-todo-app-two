@@ -41,7 +41,10 @@
 
 (defn home-page []
   [:section.section>div.container>div.content
-   [:textarea {:placeholder "new todo here"}]])
+   [:textarea {:value @(rf/subscribe [:new-todo-text])
+               :placeholder "Write what you need to do!"
+               :on-change (fn [event]
+                            (rf/dispatch [:change-new-todo-text (-> event .-target .-value)]))}]])
 
 (def pages
   {:home #'home-page

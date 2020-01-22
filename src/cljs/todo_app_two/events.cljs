@@ -48,6 +48,11 @@
   (fn [_ _]
     {:dispatch [:fetch-docs]}))
 
+(rf/reg-event-db
+  :change-new-todo-text
+  (fn [db [event value]]
+    (assoc db :new-todo-text value)))
+
 ;;subscriptions
 
 (rf/reg-sub
@@ -76,3 +81,8 @@
   :common/error
   (fn [db _]
     (:common/error db)))
+
+(rf/reg-sub
+  :new-todo-text
+  (fn [db _]
+    (:new-todo-text db)))
