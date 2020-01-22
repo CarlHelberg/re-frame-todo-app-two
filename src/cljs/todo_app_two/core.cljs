@@ -46,7 +46,8 @@
    (if (:done todo-item)
      [:button {:on-click #(rf/dispatch [:mark-as-not-done todo-item])} "Mark as not done"]
      [:button {:on-click #(rf/dispatch [:mark-as-done todo-item])} "Mark as done"])
-   [:button {:on-click #(rf/dispatch [:edit-todo-text todo-item])} "Edit"]])
+   [:button {:on-click #(rf/dispatch [:edit-todo-text todo-item])} "Edit"]
+   [:button {:on-click #(rf/dispatch [:delete-todo todo-item])} "Delete"]])
 
 (defn todo-list
   [todo-list]

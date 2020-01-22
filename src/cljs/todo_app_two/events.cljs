@@ -77,14 +77,16 @@
 (rf/reg-event-db
   :mark-as-done
   (fn [db [event-name todo-item]]
-    (assoc db :todos (map (fn [todo] (if (= (:todo todo) (:todo todo-item))
+    (assoc db :todos (map (fn [todo]
+                            (if (= (:todo todo) (:todo todo-item))
                       (assoc todo :done true)
                       todo)) (:todos db)))))
 
 (rf/reg-event-db
   :mark-as-not-done
   (fn [db [event-name todo-item]]
-    (assoc db :todos (map (fn [todo] (if (= (:todo todo) (:todo todo-item))
+    (assoc db :todos (map (fn [todo]
+                            (if (= (:todo todo) (:todo todo-item))
                                        (assoc todo :done false)
                                        todo)) (:todos db)))))
 
@@ -99,6 +101,11 @@
                                        todo)) todos)]
     {:db (assoc db :todos new-todos)
      :dispatch [:reset-new-todo-text]})))
+
+(rf/reg-event-db
+  :delete-todo
+  (fn [db [_ todo-item]]
+    (assoc db :todos (remove #(= (:todo todo-item) (:todo %)) (:todos db)))))
 
 ;;subscriptions
 
