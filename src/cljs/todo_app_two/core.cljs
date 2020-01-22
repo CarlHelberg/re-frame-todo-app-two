@@ -56,7 +56,7 @@
   [todo-item]
   [:li (:todo todo-item)
    [:br]
-   [:button "Mark as not done"]])
+   [:button {:on-click #(rf/dispatch [:mark-as-not-done todo-item])}"Mark as not done"]])
 
 (defn display-completed-todos
   [todo-list]

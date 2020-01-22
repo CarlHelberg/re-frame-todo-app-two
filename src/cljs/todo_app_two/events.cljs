@@ -81,6 +81,13 @@
                       (assoc todo :done true)
                       todo)) (:todos db)))))
 
+(rf/reg-event-db
+  :mark-as-not-done
+  (fn [db [event-name todo-item]]
+    (assoc db :todos (map (fn [todo] (if (= (:todo todo) (:todo todo-item))
+                                       (assoc todo :done false)
+                                       todo)) (:todos db)))))
+
 ;;subscriptions
 
 (rf/reg-sub
