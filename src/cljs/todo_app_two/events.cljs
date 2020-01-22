@@ -88,6 +88,18 @@
                                        (assoc todo :done false)
                                        todo)) (:todos db)))))
 
+(rf/reg-event-fx
+  :edit-todo-text
+  (fn [effects [event-name todo-item]]
+    (let [db        (:db effects)
+          todos     (:todos db)
+          text      (:new-todo-text db)
+          new-todos (map (fn [todo] (if (= (:todo todo) (:todo todo-item))
+                                       (assoc todo :todo text)
+                                       todo)) todos)]
+    {:db (assoc db :todos new-todos)
+     :dispatch [:reset-new-todo-text]})))
+
 ;;subscriptions
 
 (rf/reg-sub

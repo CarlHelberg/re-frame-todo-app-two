@@ -44,7 +44,7 @@
   [:li (:todo todo-item)
    [:br]
    [:button {:on-click #(rf/dispatch [:mark-as-done todo-item])} "Mark as done"]
-   [:button "Edit"]])
+   [:button {:on-click #(rf/dispatch [:edit-todo-text todo-item])}"Edit"]])
 
 (defn display-incompleted-todos
   [todo-list]
@@ -73,6 +73,7 @@
    [:button {:on-click #(rf/dispatch [:create-new-todo])} "Add todo"]
    [:br]
    [:h1 "To Do"]
+   [:h3 "To edit a todo, enter the text above and click on Edit! (not Add!)"]
    [display-incompleted-todos @(rf/subscribe [:todo-list])]
    [:br]
    [:h1 "Done"]
