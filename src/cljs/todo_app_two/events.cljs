@@ -102,6 +102,11 @@
     {:db (assoc db :todos new-todos)
      :dispatch [:reset-new-todo-text]})))
 
+(rf/reg-event-db
+  :delete-todo
+  (fn [db [_ todo-item]]
+    (assoc db :todos (remove #(= (:todo todo-item) (:todo %)) (:todos db)))))
+
 ;;subscriptions
 
 (rf/reg-sub
