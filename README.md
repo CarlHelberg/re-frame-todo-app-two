@@ -2,7 +2,7 @@
 
 generated using Luminus version "3.56"
 
-FIXME
+I am fixed
 
 ## Prerequisites
 

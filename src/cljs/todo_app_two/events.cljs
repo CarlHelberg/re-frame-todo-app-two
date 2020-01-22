@@ -107,3 +107,21 @@
   :new-todo-text
   (fn [db _]
     (:new-todo-text db)))
+
+(rf/reg-sub
+  :todo-list
+  (fn [db _]
+    (:todos db)))
+
+(rf/reg-sub
+  :completed-todos
+  (fn [db _]
+    (let [todos (:todos db)]
+      (filter :done todos))))
+
+(rf/reg-sub
+  :incompleted-todos
+  (fn [db _]
+    (let [todos (:todos db)]
+      (filter #(not (:done %)) todos))))
+
