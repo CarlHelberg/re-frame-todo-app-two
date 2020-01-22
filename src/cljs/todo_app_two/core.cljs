@@ -39,25 +39,14 @@
   [:section.section>div.container>div.content
    [:img {:src "/img/warning_clojure.png"}]])
 
-(defn create-incompleted-todos
+(defn todo
   [todo-item]
   [:li (:todo todo-item)])
 
-(defn display-incompleted-todos
+(defn todo-list
   [todo-list]
   [:ul
-   (map (fn [todo-item] (if (= (:done todo-item) false)
-                          (create-incompleted-todos todo-item))) todo-list)])
-
-(defn create-completed-todos
-  [todo-item]
-  [:li (:todo todo-item)])
-
-(defn display-completed-todos
-  [todo-list]
-  [:ul
-   (map (fn [todo-item] (if (= (:done todo-item) true)
-                          (create-completed-todos todo-item))) todo-list)])
+   (map todo todo-list)])
 
 (defn home-page []
   [:section.section>div.container>div.content
@@ -68,10 +57,10 @@
    [:button {:on-click #(rf/dispatch [:create-new-todo])} "Add todo"]
    [:br]
    [:h1 "To Do"]
-   [display-incompleted-todos @(rf/subscribe [:todo-list])]
+   [todo-list @(rf/subscribe [:incompleted-todos])]
    [:br]
    [:h1 "Done"]
-   [display-completed-todos @(rf/subscribe [:todo-list])]
+   [todo-list @(rf/subscribe [:completed-todos])]
    ])
 
 (def pages
