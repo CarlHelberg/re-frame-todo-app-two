@@ -41,7 +41,7 @@
 
 (defn todo
   [todo-item]
-  [:li (:todo todo-item)
+  [:li {:key (:id todo-item)}(:text todo-item)
    [:br]
    (if (:done todo-item)
      [:button {:on-click #(rf/dispatch [:mark-as-not-done todo-item])} "Mark as not done"]

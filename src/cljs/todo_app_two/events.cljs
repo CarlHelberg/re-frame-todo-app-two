@@ -30,6 +30,11 @@
   (fn [db [_ docs]]
     (assoc db :docs docs)))
 
+(rf/reg-event-db
+  :set-todos
+  (fn [db [_ todos]]
+    (assoc db :todos todos)))
+
 (rf/reg-event-fx
   :fetch-docs
   (fn [_ _]
@@ -37,6 +42,14 @@
                   :uri             "/docs"
                   :response-format (ajax/raw-response-format)
                   :on-success       [:set-docs]}}))
+
+(rf/reg-event-fx
+  :fetch-todos
+  (fn [_ _]
+    {:http-xhrio {:method          :get
+                  :uri             "/todos"
+                  :response-format (ajax/json-response-format {:keywords? true})
+                  :on-success       [:set-todos]}}))
 
 (rf/reg-event-db
   :common/set-error
@@ -46,7 +59,7 @@
 (rf/reg-event-fx
   :page/init-home
   (fn [_ _]
-    {:dispatch [:fetch-docs]}))
+    {:dispatch [:fetch-todos]}))
 
 (rf/reg-event-db
   :change-new-todo-text

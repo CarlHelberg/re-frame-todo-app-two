@@ -4,10 +4,19 @@
    [clojure.java.io :as io]
    [todo-app-two.middleware :as middleware]
    [ring.util.response]
-   [ring.util.http-response :as response]))
+   [ring.util.http-response :as response]
+   [clojure.data.json :as json]))
 
 (defn home-page [request]
   (layout/render request "home.html"))
+
+(defn get-todos
+  [_]
+  (-> [{:id 1 :text "first" :done false}
+       {:id 2 :text "second" :done false}]
+      (json/write-str )
+      (response/ok )
+      (response/header "Content-Type" "application/json")))
 
 (defn home-routes []
   [""
@@ -16,5 +25,6 @@
    ["/" {:get home-page}]
    ["/docs" {:get (fn [_]
                     (-> (response/ok (-> "docs/docs.md" io/resource slurp))
-                        (response/header "Content-Type" "text/plain; charset=utf-8")))}]])
+                        (response/header "Content-Type" "text/plain; charset=utf-8")))}]
+   ["/todos" {:get  #(get-todos %)}]])
 
