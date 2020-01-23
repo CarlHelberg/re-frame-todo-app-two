@@ -143,10 +143,17 @@
                   :format           (ajax/json-request-format)
                   :response-format  (ajax/json-response-format {:keywords? true})}})))
 
-(rf/reg-event-db
+(rf/reg-event-fx
   :delete-todo
-  (fn [db [_ todo-item]]
-    (assoc db :todos (remove #(= (:todo todo-item) (:todo %)) (:todos db)))))
+  (fn [effects [_ todo-item]]
+    (let [db            (:db effects)
+          new-todos    (remove #(= (:todo todo-item) (:todo %)) (:todos db))]
+    {:db (assoc db :todos todo-item)
+     :http-xhrio {:method          :post
+                  :uri             (str "/todos/" (:id todo-item))
+                  :params           todo-item
+                  :format           (ajax/json-request-format)
+                  :response-format  (ajax/json-response-format {:keywords? true})}})))
 
 ;;subscriptions
 
