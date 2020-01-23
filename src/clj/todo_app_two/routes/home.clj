@@ -20,7 +20,12 @@
 (defn create-todo
   [_]
   (println "create-todo called")
-  (response/created "/todos"))
+  (response/accepted "/todos"))
+
+(defn update-todo
+  [_]
+  (println "update-todo called")
+  (response/ok "/todos"))
 
 (defn home-routes []
   [""
@@ -32,5 +37,6 @@
                         (response/header "Content-Type" "text/plain; charset=utf-8")))}]
    ["/todos" {:get  #(get-todos %)
               :post #(create-todo %)}]
+   ["/todos/:todo-id" {:post #(update-todo %)}]
    ])
 

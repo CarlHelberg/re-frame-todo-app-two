@@ -93,21 +93,38 @@
   (fn [db _]
     (assoc db :new-todo-text "")))
 
-(rf/reg-event-db
+(rf/reg-event-fx
   :mark-as-done
-  (fn [db [event-name todo-item]]
-    (assoc db :todos (map (fn [todo]
+  (fn [effects [_ todo-item]]
+    (let [db (:db effects)
+          new-todo  (map (fn [todo]
                             (if (= (:todo todo) (:todo todo-item))
-                      (assoc todo :done true)
-                      todo)) (:todos db)))))
+                              (assoc todo :done true)
+                                  todo)) (:todos db))]
 
-(rf/reg-event-db
+      {:db (assoc db :todos new-todo)
+       :http-xhrio {:method          :post
+                    :uri             (str "/todos/" (:id todo-item))
+                    :params           new-todo
+                    :format           (ajax/json-request-format)
+                    :response-format  (ajax/json-response-format {:keywords? true})}})))
+
+(rf/reg-event-fx
   :mark-as-not-done
-  (fn [db [event-name todo-item]]
-    (assoc db :todos (map (fn [todo]
+  (fn [effects [_ todo-item]]
+    (let [db        (:db effects)
+         new-todo   (map (fn [todo]
                             (if (= (:todo todo) (:todo todo-item))
-                                       (assoc todo :done false)
-                                       todo)) (:todos db)))))
+                              (assoc todo :done false)
+                              todo)) (:todos db))]
+      {:db (assoc db :todos new-todo)
+       :http-xhrio {:method          :post
+                    :uri             (str "/todos/" (:id todo-item))
+                    :params           new-todo
+                    :format           (ajax/json-request-format)
+                    :response-format  (ajax/json-response-format {:keywords? true})}}
+      ))
+  )
 
 (rf/reg-event-fx
   :edit-todo-text
