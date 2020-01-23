@@ -17,6 +17,10 @@
       (json/write-str )
       (response/ok )
       (response/header "Content-Type" "application/json")))
+(defn create-todo
+  [_]
+  (println "create-todo called")
+  (response/created "/todos"))
 
 (defn home-routes []
   [""
@@ -26,5 +30,7 @@
    ["/docs" {:get (fn [_]
                     (-> (response/ok (-> "docs/docs.md" io/resource slurp))
                         (response/header "Content-Type" "text/plain; charset=utf-8")))}]
-   ["/todos" {:get  #(get-todos %)}]])
+   ["/todos" {:get  #(get-todos %)
+              :post #(create-todo %)}]
+   ])
 

@@ -79,8 +79,14 @@
           new-todos (if (nil? todos)
                       [(create-todo-from-text text)]
                       (conj todos (create-todo-from-text text)))]
+
       {:db (assoc db :todos new-todos)
-       :dispatch [:reset-new-todo-text]})))
+       :dispatch [:reset-new-todo-text]
+       :http-xhrio {:method          :post
+                    :uri             "/todos"
+                    :params           text
+                    :format           (ajax/json-request-format)
+                    :response-format  (ajax/json-response-format {:keywords? true})}})))
 
 (rf/reg-event-db
   :reset-new-todo-text
