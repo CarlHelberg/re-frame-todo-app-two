@@ -136,7 +136,12 @@
                                        (assoc todo :todo text)
                                        todo)) todos)]
     {:db (assoc db :todos new-todos)
-     :dispatch [:reset-new-todo-text]})))
+     :dispatch [:reset-new-todo-text]
+     :http-xhrio {:method          :post
+                  :uri             (str "/todos/" (:id todo-item))
+                  :params           text
+                  :format           (ajax/json-request-format)
+                  :response-format  (ajax/json-response-format {:keywords? true})}})))
 
 (rf/reg-event-db
   :delete-todo
