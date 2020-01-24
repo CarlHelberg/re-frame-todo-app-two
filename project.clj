@@ -8,6 +8,8 @@
                  [cljs-ajax "0.8.0"]
                  [clojure.java-time "0.3.2"]
                  [com.cognitect/transit-clj "0.8.319"]
+                 [com.datomic/datomic-free "0.9.5697" :exclusions [org.slf4j/log4j-over-slf4j org.slf4j/slf4j-nop com.google.guava/guava]]
+                 [io.rkn/conformity "0.5.1"]
                  [cprop "0.1.15"]
                  [day8.re-frame/http-fx "0.1.6"]
                  [expound "0.8.3"]
@@ -93,7 +95,8 @@
                   :plugins      [[com.jakemccrary/lein-test-refresh "0.24.1"]
                                  [jonase/eastwood "0.3.5"]
                                  [lein-doo "0.1.11"]
-                                 [lein-figwheel "0.5.19"]]
+                                 [lein-figwheel "0.5.19"]
+                                 [com.datomic/datomic-free "0.9.5697"]]
                   :cljsbuild{:builds
                    {:app
                     {:source-paths ["src/cljs" "src/cljc" "env/dev/cljs"]

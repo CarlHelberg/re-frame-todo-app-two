@@ -2,6 +2,7 @@
   (:require
     [todo-app-two.handler :as handler]
     [todo-app-two.nrepl :as nrepl]
+    [todo-app-two.db.core :as db]
     [luminus.http-server :as http]
     [todo-app-two.config :refer [env]]
     [clojure.tools.cli :refer [parse-opts]]
