@@ -35,6 +35,10 @@
   (fn [db [_ todos]]
     (assoc db :todos todos)))
 
+(defn failed-message
+  []
+  (js/alert "Failed to create new todo"))
+
 (rf/reg-event-fx
   :fetch-docs
   (fn [_ _]
@@ -45,11 +49,11 @@
 
 (rf/reg-event-fx
   :fetch-todos
-  (fn [_ _]
-    {:http-xhrio {:method          :get
-                  :uri             "/todos"
-                  :response-format (ajax/json-response-format {:keywords? true})
-                  :on-success       [:set-todos]}}))
+  (fn [_]
+      {:http-xhrio {:method          :get
+                    :uri             "/todos"
+                    :response-format (ajax/json-response-format {:keywords? true})
+                    :on-success       [:set-todos]}}))
 
 (rf/reg-event-db
   :common/set-error
@@ -70,6 +74,7 @@
   [text]
   {:todo text :done false})
 
+
 (rf/reg-event-fx
   :create-new-todo
   (fn [effects _]
@@ -86,7 +91,8 @@
                     :uri             "/todos"
                     :params           {:todo/text text :todo/done false}
                     :format           (ajax/json-request-format)
-                    :response-format  (ajax/json-response-format {:keywords? true})}})))
+                    :response-format  (ajax/json-response-format {:keywords? true})
+                    :on-success       [:fetch-todos]}})))
 
 (rf/reg-event-db
   :reset-new-todo-text

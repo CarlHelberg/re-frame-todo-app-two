@@ -12,28 +12,35 @@
 (defn home-page [request]
   (layout/render request "home.html"))
 
+
 (defn get-todos
   [_]
-  (-> [{:id 1 :text "first" :done false}
-       {:id 2 :text "second" :done false}]
+(let [DB                (d/db db/conn)
+      todos             (d/q '[:find ?e ?text ?done
+                              :where
+                              [?e :todo/done ?done]
+                              [?e :todo/text ?text]
+                              ] DB)
+      convert-for-front-end   (fn [[id text done]] {:text text :done done :id id}) ]
+    (-> (map convert-for-front-end todos)
       (json/write-str )
       (response/ok )
-      (response/header "Content-Type" "application/json")))
+      (response/header "Content-Type" "application/json"))))
 
 (defn create-todo
   [req]
-  (println "================================================================")
-  (println (:body-params req))
   (let [params (:body-params req)]
     @(d/transact db/conn [{:db/id "new"
                            :todo/text (:text params)
-                           :todo/done (:done params)}]))
-  (response/accepted "/todos"))
+                           :todo/done (:done params)}])
+  (-> (response/accepted "{}" )
+      (response/header "Content-Type" "application/json"))))
+
 
 (defn update-todo
   [_]
   (println "update-todo called")
-  (response/ok "/todos"))
+  (response/ok "{}"))
 
 (defn home-routes []
   [""
