@@ -5,7 +5,9 @@
    [todo-app-two.middleware :as middleware]
    [ring.util.response]
    [ring.util.http-response :as response]
-   [clojure.data.json :as json]))
+   [clojure.data.json :as json]
+   [datomic.api :as d]
+   [todo-app-two.db.core :as db]))
 
 (defn home-page [request]
   (layout/render request "home.html"))
@@ -17,9 +19,15 @@
       (json/write-str )
       (response/ok )
       (response/header "Content-Type" "application/json")))
+
 (defn create-todo
-  [_]
-  (println "create-todo called")
+  [req]
+  (println "================================================================")
+  (println (:body-params req))
+  (let [params (:body-params req)]
+    @(d/transact db/conn [{:db/id "new"
+                           :todo/text (:text params)
+                           :todo/done (:done params)}]))
   (response/accepted "/todos"))
 
 (defn update-todo
@@ -29,7 +37,7 @@
 
 (defn home-routes []
   [""
-   {:middleware [middleware/wrap-csrf
+   {:middleware [
                  middleware/wrap-formats]}
    ["/" {:get home-page}]
    ["/docs" {:get (fn [_]
@@ -39,4 +47,3 @@
               :post #(create-todo %)}]
    ["/todos/:todo-id" {:post #(update-todo %)}]
    ])
-

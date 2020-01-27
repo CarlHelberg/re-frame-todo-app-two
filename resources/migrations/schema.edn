@@ -1,4 +1,16 @@
 {;; norm1 installs the user table schema into Datomic
+ :todos {:txes [[{:db/doc                "Todo Text"
+                  :db/ident              :todo/text
+                  :db/valueType          :db.type/string
+                  :db/cardinality        :db.cardinality/one
+                  :db/id                 #db/id [:db.part/db]
+                  :db.install/_attribute :db.part/db}
+                 {:db/doc                "Todo Done"
+                  :db/ident              :todo/done
+                  :db/valueType          :db.type/boolean
+                  :db/cardinality        :db.cardinality/one
+                  :db/id                 #db/id [:db.part/db]
+                  :db.install/_attribute :db.part/db}]]}
  :project-name/norm1 {:txes [[
    {:db/doc                "User ID"
     :db/ident              :user/id

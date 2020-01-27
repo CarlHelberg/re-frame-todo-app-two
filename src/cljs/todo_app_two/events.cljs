@@ -84,7 +84,7 @@
        :dispatch [:reset-new-todo-text]
        :http-xhrio {:method          :post
                     :uri             "/todos"
-                    :params           text
+                    :params           {:todo/text text :todo/done false}
                     :format           (ajax/json-request-format)
                     :response-format  (ajax/json-response-format {:keywords? true})}})))
 
