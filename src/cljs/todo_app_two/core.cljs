@@ -41,7 +41,12 @@
 
 (defn todo
   [todo-item]
-  [:li {:key (:id todo-item)}(:text todo-item)
+  [:li {:key (:id todo-item)}
+   (let [text (:text todo-item)]
+     (if (= true (:pending todo-item))
+     [:span {:style {:color "grey"}} (str text)]
+     text))
+
    [:br]
    (if (:done todo-item)
      [:button {:on-click #(rf/dispatch [:mark-as-not-done todo-item])} "Mark as not done"]

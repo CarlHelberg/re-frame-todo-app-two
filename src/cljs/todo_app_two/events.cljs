@@ -72,7 +72,7 @@
 
 (defn create-todo-from-text
   [text]
-  {:todo text :done false})
+  {:text text :done false :pending true})
 
 
 (rf/reg-event-fx
