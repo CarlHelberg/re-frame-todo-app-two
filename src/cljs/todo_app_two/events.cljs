@@ -138,28 +138,34 @@
     (let [db        (:db effects)
           todos     (:todos db)
           text      (:new-todo-text db)
-          new-todos (map (fn [todo] (if (= (:todo todo) (:todo todo-item))
+          new-todos (map (fn [todo] (if (= (:id todo) (:id todo-item))
                                        (assoc todo :todo text)
                                        todo)) todos)]
     {:db (assoc db :todos new-todos)
      :dispatch [:reset-new-todo-text]
      :http-xhrio {:method          :post
                   :uri             (str "/todos/" (:id todo-item))
-                  :params           text
+                  :params           [(:id todo-item) text (:done todo-item)]
                   :format           (ajax/json-request-format)
-                  :response-format  (ajax/json-response-format {:keywords? true})}})))
+                  :response-format  (ajax/json-response-format {:keywords? true})
+                  :on-success       [:fetch-todos]}})))
 
 (rf/reg-event-fx
   :delete-todo
   (fn [effects [_ todo-item]]
     (let [db            (:db effects)
-          new-todos    (remove #(= (:todo todo-item) (:todo %)) (:todos db))]
-    {:db (assoc db :todos todo-item)
+          todos         (:todos db)
+          todo-id       (:id todo-item)
+          new-todos (map (fn [todo] (if (not (= (:id todo) todo-id))
+                                      todo)) todos)]
+
+    {:db (assoc db :todos new-todos)
      :http-xhrio {:method          :post
-                  :uri             (str "/todos/" (:id todo-item))
-                  :params           todo-item
+                  :uri             (str "/todos/" todo-id)
+                  :params           [todo-id]
                   :format           (ajax/json-request-format)
-                  :response-format  (ajax/json-response-format {:keywords? true})}})))
+                  :response-format  (ajax/json-response-format {:keywords? true})
+                  :on-success       [:fetch-todos]}})))
 
 ;;subscriptions
 

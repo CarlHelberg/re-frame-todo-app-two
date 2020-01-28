@@ -28,19 +28,27 @@
       (response/header "Content-Type" "application/json"))))
 
 (defn create-todo
-  [req]
-  (let [params (:body-params req)]
+  [request]
+  (let [params (:body-params request)]
     @(d/transact db/conn [{:db/id "new"
                            :todo/text (:text params)
                            :todo/done (:done params)}])
-  (-> (response/accepted "{}" )
+  (-> (response/accepted "{}")
       (response/header "Content-Type" "application/json"))))
 
 
 (defn update-todo
-  [_]
-  (println "update-todo called")
-  (response/ok "{}"))
+  [input]
+  (let [params      (:body-params input)
+        todo-id     (first params)
+        text        (second params)]
+    (if (> (count params) 1)
+        @(d/transact db/conn [{ :db/id todo-id
+                                :todo/text text
+                                :todo/done (nth params 2)}])
+        @(d/transact db/conn [[:db.fn/retractEntity todo-id]]))
+    (-> (response/accepted "{}")
+        (response/header "Content-Type" "application/json"))))
 
 (defn home-routes []
   [""
