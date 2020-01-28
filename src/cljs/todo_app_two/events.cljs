@@ -103,32 +103,40 @@
   :mark-as-done
   (fn [effects [_ todo-item]]
     (let [db (:db effects)
+          todos     (:todos db)
+          todo-id   (:id todo-item)
           new-todo  (map (fn [todo]
-                            (if (= (:todo todo) (:todo todo-item))
+                            (if (= (:id todo) todo-id)
                               (assoc todo :done true)
-                                  todo)) (:todos db))]
+                                  todo))
+                         todos)]
 
       {:db (assoc db :todos new-todo)
        :http-xhrio {:method          :post
                     :uri             (str "/todos/" (:id todo-item))
-                    :params           new-todo
+                    :params           [todo-id (:done todo-item)]
                     :format           (ajax/json-request-format)
-                    :response-format  (ajax/json-response-format {:keywords? true})}})))
+                    :response-format  (ajax/json-response-format {:keywords? true})
+                    :on-success       [:fetch-todos]}})))
 
 (rf/reg-event-fx
   :mark-as-not-done
   (fn [effects [_ todo-item]]
     (let [db        (:db effects)
+          todos     (:todos db)
+          todo-id   (:id todo-item)
          new-todo   (map (fn [todo]
-                            (if (= (:todo todo) (:todo todo-item))
+                            (if (= (:id todo) todo-id)
                               (assoc todo :done false)
-                              todo)) (:todos db))]
+                              todo))
+                         todos)]
       {:db (assoc db :todos new-todo)
        :http-xhrio {:method          :post
                     :uri             (str "/todos/" (:id todo-item))
-                    :params           new-todo
+                    :params           [todo-id (:done todo-item)]
                     :format           (ajax/json-request-format)
-                    :response-format  (ajax/json-response-format {:keywords? true})}}
+                    :response-format  (ajax/json-response-format {:keywords? true})
+                    :on-success       [:fetch-todos]}}
       ))
   )
 

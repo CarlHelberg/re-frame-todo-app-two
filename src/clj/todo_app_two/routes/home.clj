@@ -42,11 +42,16 @@
   (let [params      (:body-params input)
         todo-id     (first params)
         text        (second params)]
-    (if (> (count params) 1)
+    (if (= (count params) 3)
         @(d/transact db/conn [{ :db/id todo-id
                                 :todo/text text
-                                :todo/done (nth params 2)}])
+                                :todo/done (nth params 2)}]))
+    (if (= (count params) 2)
+      @(d/transact db/conn [{ :db/id todo-id
+                             :todo/done (not (second params))}]))
+    (if (= (count params) 1)
         @(d/transact db/conn [[:db.fn/retractEntity todo-id]]))
+
     (-> (response/accepted "{}")
         (response/header "Content-Type" "application/json"))))
 
